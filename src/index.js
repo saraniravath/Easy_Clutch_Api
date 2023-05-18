@@ -1,7 +1,7 @@
 import mysql2 from 'mysql2'
 import express from 'express'
 import pool from './mysql.js';
-import { listPackagesHandler } from './handlers/package.js';
+import { listPackagesHandler, updatePackagesHandler } from './handlers/package.js';
 
 const connection = mysql2.createConnection({
     host: "localhost",
@@ -24,25 +24,7 @@ app.listen(port,() => {
 
 app.get("/packages", listPackagesHandler)
 
-app.put("/feepackages/:id", (req, res) =>{
-    try{
-        console.log(req.body);
-        const id = req.params.id;
-        const name = req.body.name;
-        const price = req.body.price;
-
-        connection.query('UPDATE fee_package SET name=?, price=? WHERE id=?', [name,price,id],(err,result) =>{
-            if (err) throw err;
-            res.status(200).json(result);
-
-        });
-
-    }
-    catch (e) {
-        console.log(e.message)
-        res.status(500).json({ errorMessage:'An unexpected error occured. Check server logs' });
-    }
-})
+app.put("/packages/:id", updatePackagesHandler)
  
 app.post("/feepackages", (req, res) => {
     try{
