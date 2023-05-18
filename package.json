@@ -1,14 +1,14 @@
 {
-  "name": "fee_package",
+  "name": "easy-clutch-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API for the Easy Clutch project which is used by instructors and students to schedule and book driving lessons.",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Sara Theresa Sabu saraniravath2002@gmail.com",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",

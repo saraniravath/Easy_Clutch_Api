@@ -1,5 +1,7 @@
 import mysql2 from 'mysql2'
 import express from 'express'
+import pool from './mysql.js';
+import { listPackagesHandler } from './handlers/package.js';
 
 const connection = mysql2.createConnection({
     host: "localhost",
@@ -20,25 +22,7 @@ app.listen(port,() => {
     })
 })
 
-app.get("/feepackages", (req,res)=>{
-    try{
-        const basicQuery = "SELECT * FROM fee_package"
-        const value =[]
-        const fields = [basicQuery]
-        if (req.query.name) {
-            fields.push('name=?')
-            value.push(req.query.name)
-        }
-        const sqlQuery = fields.join(' AND ')
-        connection.query(sqlQuery, value, (err, result) => {
-            if (err) throw err;
-            res.status(200).json(result);
-        });
-    }catch(e) {
-        console.log(e.message)
-        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
-    }
-})
+app.get("/packages", listPackagesHandler)
 
 app.put("/feepackages/:id", (req, res) =>{
     try{
