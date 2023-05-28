@@ -4,6 +4,7 @@ export const listPackagesController = (name) => {
     return listPackagesModel(name)
 }
 
-export const updatePackagesController = (id,name,price) => {
-    return updatePackagesModel(id,name,price)
+export const updatePackagesController = (id,price) => {
+    return updatePackagesModel(id,price)
 }
+

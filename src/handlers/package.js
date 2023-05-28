@@ -7,16 +7,16 @@ export const listPackagesHandler = async (req, res) => {
         res.status(200).json(response)
     }
     catch (error) {
-        console.log("An unexpected error occured while updating packages ", error.message)
+        console.log("An unexpected error occured while listing packages ", error.message)
         res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
     }
 }
+
 export const updatePackagesHandler = async (req,res) => {
     try {
         const id = req.params.id;
-        const name = req.body.name;
         const price = req.body.price;
-        const updated = await updatePackagesController(id,name,price)
+        const updated = await updatePackagesController(id,price)
         if (!updated){
             res.status(404).json({errorMessage: "A package with this id does not exist"})
             return
