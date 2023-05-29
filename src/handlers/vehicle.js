@@ -66,4 +66,4 @@ export const deleteVehiclesHandler = async (req, res) => {
         console.log("An unexpected error occured while deleting vehicle", error.message)
         res.status(500).json({ errorMessage: "An unexpected error occured. Check server logs"});
         }
-    }
+}

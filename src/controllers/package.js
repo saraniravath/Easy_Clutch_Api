@@ -7,4 +7,3 @@ export const listPackagesController = (name) => {
 export const updatePackagesController = (id,price) => {
     return updatePackagesModel(id,price)
 }
-
