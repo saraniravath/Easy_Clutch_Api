@@ -1,16 +1,16 @@
 import { deleteVehiclesModel, insertVehiclesModel, listVehiclesModel, updateVehiclesModel } from "../models/vehicle.js"
 
 
-export const listVehiclesController = (type, model_name, registration_number) => {
-    return listVehiclesModel(type, model_name, registration_number)
+export const listVehiclesController = (type, modelName, registrationNumber) => {
+    return listVehiclesModel(type, modelName, registrationNumber)
 }
 
-export const updateVehiclesController = (id, model_name, registration_number, type) => {
-    return updateVehiclesModel(id, model_name, registration_number, type)
+export const updateVehiclesController = (id, modelName, registrationNumber, type) => {
+    return updateVehiclesModel(id, modelName, registrationNumber, type)
 }
 
-export const insertVehiclesController = (id, model_name, registration_number, type) => {
-    return insertVehiclesModel(id, model_name, registration_number, type)
+export const insertVehiclesController = (modelName, registrationNumber, type) => {
+    return insertVehiclesModel(modelName, registrationNumber, type)
 }
 
 export const deleteVehicleController = (id) =>  {

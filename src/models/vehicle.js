@@ -1,6 +1,6 @@
 import pool from "../mysql.js"
 
-export const listVehiclesModel = async (type, model_name, registration_number) => {
+export const listVehiclesModel = async (type, modelName, registrationNumber) => {
     const basicQuery = "SELECT * FROM vehicle WHERE active=1"
     const values = []
     const fields = []
@@ -8,13 +8,13 @@ export const listVehiclesModel = async (type, model_name, registration_number) =
         fields.push('type=?')
         values.push(type)
     }
-    if (model_name) {
+    if (modelName) {
         fields.push('model_name=?')
-        values.push(model_name)
+        values.push(modelName)
     }
-    if (registration_number) {
+    if (registrationNumber) {
         fields.push('registration_number=?')
-        values.push(registration_number)
+        values.push(registrationNumber)
     }
     const whereQuery = fields.join("AND")
     let sqlQuery
@@ -27,18 +27,18 @@ export const listVehiclesModel = async (type, model_name, registration_number) =
     return rows
 }
 
-export const updateVehiclesModel = async (id, model_name, registration_number, type) => {
+export const updateVehiclesModel = async (id, modelName, registrationNumber, type) => {
     const sqlQuery = "UPDATE vehicle SET model_name=?, registration_number=?, type=? WHERE id =? AND active = 1"
-    const result = await pool.query(sqlQuery, [model_name, registration_number, type, id])
+    const result = await pool.query(sqlQuery, [modelName, registrationNumber, type, id])
     if (result[0].affectedRows === 0) {
         return false
     }
     return true
 }
 
-export const insertVehiclesModel = async (id, model_name, registration_number, type) => {
+export const insertVehiclesModel = async (modelName, registrationNumber, type) => {
     const sqlQuery = "INSERT INTO vehicle(model_name,registration_number,type) values(?,?,?)"
-    const result = await pool.query(sqlQuery, [model_name, registration_number, type])
+    const result = await pool.query(sqlQuery, [modelName, registrationNumber, type])
     if (result[0].affectedRows === 0) {
         return false
     }

@@ -21,8 +21,8 @@ export const listPackagesModel = async (name) => {
 
 export const updatePackagesModel = async (id, price) => {
     const sqlQuery = "UPDATE vehicle_type SET price=? WHERE id=?"
-    const result = await pool.query(sqlQuery, [ price, id])
-    if(result[0].affectedRows === 0) {
+    const result = await pool.query(sqlQuery, [price, id])
+    if (result[0].affectedRows === 0) {
         return false
     }
     return true
