@@ -1,11 +1,12 @@
 import express from 'express'
 import { listPackagesHandler, updatePackagesHandler } from './handlers/package.js';
 import { deleteVehiclesHandler, insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler } from './handlers/vehicle.js';
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(express.json())
-const port = 5000;
+const port = process.env.API_HOST_PORT;
 
 
 app.get("/packages", listPackagesHandler)
