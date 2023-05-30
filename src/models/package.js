@@ -1,4 +1,4 @@
-import pool from "../mysql.js"
+import pool from "../util/mysql.js"
 
 export const listPackagesModel = async (name) => {
     const basicQuery = "SELECT * FROM vehicle_type"
