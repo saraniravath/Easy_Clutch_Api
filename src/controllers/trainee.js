@@ -20,7 +20,6 @@ export const traineeRegisterController = async (traineeDetails) => {
 
         userId = traineeExists.id;
         await updateTraineeDetails(traineeDetails, userId);
-
     }
     else
         userId = await addTraineeDetails(traineeDetails);

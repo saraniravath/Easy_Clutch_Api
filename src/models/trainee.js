@@ -18,11 +18,11 @@ export const updateTraineeDetails = async (traineeDetails, id) => {
     let fields = [];
     let values = [];
     if (traineeDetails.firstName) {
-        fields.push("firstname = ?")
+        fields.push("first_name = ?")
         values.push(firstName)
     }
     if (traineeDetails.lastName) {
-        fields.push("lastname = ?")
+        fields.push("last_name = ?")
         values.push(lastName)
     }
     if (traineeDetails.password) {
