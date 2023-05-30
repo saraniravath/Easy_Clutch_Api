@@ -1,7 +1,7 @@
 import pool from "../util/mysql.js"
 
 export const listPackagesModel = async (name) => {
-    const basicQuery = "SELECT * FROM fee_package"
+    const basicQuery = "SELECT * FROM vehicle_type"
     const values = []
     const fields = []
     if (name) {
@@ -19,9 +19,9 @@ export const listPackagesModel = async (name) => {
     return rows
 }
 
-export const updatePackagesModel = async (id, name, price) => {
-    const sqlQuery = "UPDATE fee_package SET name=?, price=? WHERE id=?"
-    const result = await pool.query(sqlQuery, [name, price, id])
+export const updatePackagesModel = async (id, price) => {
+    const sqlQuery = "UPDATE vehicle_type SET price=? WHERE id=?"
+    const result = await pool.query(sqlQuery, [price, id])
     if (result[0].affectedRows === 0) {
         return false
     }
