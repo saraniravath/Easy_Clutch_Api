@@ -17,8 +17,8 @@ export const listVehiclesHandler = async (req, res) => {
 export const updateVehiclesHandler = async (req, res) => {
     try {
         const id = req.params.id;
-        const modelName = req.body.modelName;
-        const registrationNumber = req.body.registrationNumber;
+        const modelName = req.body.model_name;
+        const registrationNumber = req.body.registration_number;
         const type = req.body.type;
         const updated = await updateVehiclesController(id, modelName, registrationNumber, type)
         if (!updated) {

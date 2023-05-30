@@ -28,3 +28,19 @@ export const updatePackagesModel = async (id, price) => {
     return true
 }
 
+
+export const activatePackage = async (id) => {
+    const result = await pool.query("UPDATE package SET active= 1 WHERE trainee_id = ?", [id]);
+    if (result[0].affectedRows === 0) {
+        return false
+    }
+    return true
+}
+
+export const getTraineeIdOfPackage = async (id) => {
+    const [rows, fields] = await pool.query("SELECT trainee_id FROM package WHERE id=?", [id]);
+    if (rows) {
+        return rows[0];
+    }
+    return 0;
+}
