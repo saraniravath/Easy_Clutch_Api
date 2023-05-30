@@ -22,6 +22,6 @@ app.post("/vehicles", insertVehiclesHandler)
 app.delete('/vehicles/:id', deleteVehiclesHandler)
 
 
-app.listen(port,() => {
-    console.log("port no:5000");
-    })
+app.listen(port, () => {
+    console.log("Listening on port", port);
+})

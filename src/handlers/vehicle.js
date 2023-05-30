@@ -35,7 +35,6 @@ export const updateVehiclesHandler = async (req, res) => {
 
 export const insertVehiclesHandler = async (req, res) => {
     try {
-        //const id = req.params.id;
         const modelName = req.body.model_name;
         const registrationNumber = req.body.registration_number;
         const type = req.body.type;
