@@ -15,7 +15,8 @@ export const traineeAuth = (req, res, next) => {
             req.user = decoded;
             return next();
         }
-    } catch (err) {
+    }
+    catch (err) {
         return res.status(401).json({ errorMessage: 'Invalid or expired token' });
     }
     return res.status(403).json({ errorMessage: 'Invalid token or user-type' });
@@ -50,7 +51,8 @@ export const commonAuth = (req, res, next) => {
     try {
         const decoded = jwt.verify(token.split(" ")[1], process.env.TOKEN_KEY);
         req.user = decoded;
-    } catch (err) {
+    }
+    catch (err) {
         return res.status(401).json({ errorMessage: "Invalid Token" });
     }
     return next();

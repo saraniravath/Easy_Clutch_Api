@@ -1,6 +1,6 @@
 import express from 'express';
 import { deleteVehiclesHandler, insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler } from './handlers/vehicle.js';
-import { listPackagesHandler, updatePackagesHandler, verifyPackagePaymentHandler } from './handlers/package.js';
+import { addScheduleHandler, getScheduleHandler, listPackagesHandler, listPaymentNotificationsHandler, notifypaymentHandler, updatePackagesHandler, verifyPackagePaymentHandler } from './handlers/package.js';
 import { loginHandler, otpVerificationHandler, traineeRegisterHandler } from './handlers/trainee.js';
 import cors from 'cors';
 import { commonAuth, traineeAuth, trainerAuth } from './middleware/auth.js';
@@ -18,6 +18,10 @@ app.use(cors());
 app.get("/packages", commonAuth, listPackagesHandler)
 app.put("/packages/:id", trainerAuth, updatePackagesHandler)
 app.post('/packages/:packageId/verify', trainerAuth, verifyPackagePaymentHandler)
+app.post('/packages/type/payment/notify', traineeAuth, notifypaymentHandler)
+app.post('/packages/payments', trainerAuth, listPaymentNotificationsHandler)
+app.post('/packages/:packageId/sessions/schedule', traineeAuth, addScheduleHandler)
+app.get('/schedules/sessions', commonAuth, getScheduleHandler)
 
 app.get("/vehicles", commonAuth, listVehiclesHandler)
 app.put("/vehicles/:id", trainerAuth, updateVehiclesHandler)
