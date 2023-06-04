@@ -1,8 +1,8 @@
 import {
-    activatePackage, addScheduleModel, checkVehicleActive, checkVehicleUsage, getAvailiableSession, getRemainingSession, getRequestpackage,
+    activatePackage, addScheduleModel, checkVehicleActive, checkVehicleUsage, getAvailableSession, getRemainingSession, getRequestPackage,
     getScheduleForTraineeModel,
     getScheduleForTrainerModel,
-    getTraineeIdOfPackage, insertPackageModel, listPackagesModel, updatePackagesModel
+    insertPackageModel, listPackagesModel, updatePackagesModel
 } from "../models/package.js"
 
 export const listPackagesController = (name) => {
@@ -14,40 +14,38 @@ export const updatePackagesController = (id, price) => {
 }
 
 export const insertPackageController = async (id, packageDetails) => {
-    const availiable = await getAvailiableSession()
-    if (availiable > 0) {
-        console.log(packageDetails, availiable)
-        await insertPackageModel(id, packageDetails, availiable)
+    const available = await getAvailableSession()
+    if (available > 0) {
+        await insertPackageModel(id, packageDetails, available)
         return true;
     }
     return false;
 }
 
-export const displayRequestPackageController = async () => {
-    return await getRequestpackage()
+export const displayRequestPackageController = () => {
+    return getRequestPackage()
 }
 
 export const verifyPackagePaymentController = async (id) => {
-    const traineeId = await getTraineeIdOfPackage(id)
-    if (traineeId) {
-        await activatePackage(id)
-        return true;
-    }
-    return false;
+    return await activatePackage(id)
 }
 
 
 export const addScheduleController = async (id, scheduleDetails) => {
-    const packageDetails = await getRemainingSession(id)
-    const checkVehicle = await checkVehicleActive(scheduleDetails.vehicleNameId)
-    const checkUsage = await checkVehicleUsage(scheduleDetails)
-    if (packageDetails > 0 && checkVehicle && checkUsage) {
+    const vehicleActive = await checkVehicleActive(scheduleDetails.vehicleNameId)
+    const remainingSessions = await getRemainingSession(id)
+    const vehicleBooked = await checkVehicleUsage(scheduleDetails)
+    if (remainingSessions < 1)
+        return 1
+    else if (!vehicleActive || !vehicleBooked)
+        return 2
+    else {
         const response = await addScheduleModel(id, scheduleDetails)
         if (response) {
-            return true
+            return 3
         }
     }
-    return 0
+    return 0;
 }
 
 export const getScheduleController = (user) => {

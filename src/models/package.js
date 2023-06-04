@@ -37,15 +37,7 @@ export const activatePackage = async (id) => {
     return true
 }
 
-export const getTraineeIdOfPackage = async (id) => {
-    const [rows, fields] = await pool.query("SELECT trainee_id FROM package WHERE id=?", [id]);
-    if (rows) {
-        return rows[0];
-    }
-    return 0;
-}
-
-export const getRequestpackage = async () => {
+export const getRequestPackage = async () => {
     const [rows, fields] = await pool.query("SELECT package.*,trainee.first_name,trainee.last_name,vehicle.type FROM package,trainee,vehicle WHERE package.active=0 AND trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle.id");
     if (rows) {
         return rows;
@@ -53,7 +45,7 @@ export const getRequestpackage = async () => {
     return 0;
 }
 
-export const getAvailiableSession = async () => {
+export const getAvailableSession = async () => {
     const [rows, fields] = await pool.query("SELECT session_per_package FROM trainer");
     if (rows) {
         return rows[0].session_per_package;
