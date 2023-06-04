@@ -24,16 +24,25 @@ export const trainerLoginController = async (loginDetails) => {
     return false;
 }
 
-export const listLeaveController = (id, date, FN_or_AN) => {
-    return listLeaveModel(id, date, FN_or_AN)
+export const listLeaveController = (date, FN_or_AN) => {
+    return listLeaveModel(date, FN_or_AN)
 }
 
-export const updateLeaveController = (id, date, FN_or_AN) => {
-    return updateLeaveModel(id, date, FN_or_AN)
+export const updateLeaveController = async (id, date, FN_or_AN) => {
+    const checkLeave = await listLeaveModel(date, FN_or_AN)
+    if (checkLeave[0]) {
+        return 0
+    } else
+        return updateLeaveModel(id, date, FN_or_AN);
 }
 
-export const insertLeaveController = (date, FN_or_AN) => {
-    return insertLeaveModel(date, FN_or_AN)
+export const insertLeaveController = async (date, FN_or_AN) => {
+    const checkLeave = await listLeaveModel(date, FN_or_AN)
+    if (checkLeave[0]) {
+        return 0
+    } else
+        return insertLeaveModel(date, FN_or_AN);
+
 }
 
 export const deleteLeaveController = (id, date, FN_or_AN) => {

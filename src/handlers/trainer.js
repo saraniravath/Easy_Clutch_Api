@@ -1,4 +1,4 @@
-import { trainerLoginController, deleteLeaveController, insertLeaveController, listLeaveController, updateLeaveController } from "../controllers/trainer.js";
+import { trainerLoginController, deleteLeaveController, insertLeaveController, listLeaveController, updateLeaveController} from "../controllers/trainer.js";
 
 
 export const trainerLoginHandler = async (req, res) => {
@@ -26,8 +26,8 @@ export const listLeaveHandler = async (req, res) => {
     try {
         const id = req.query.id
         const date = req.query.date
-        const FN_or_AN = req.query.FN_or_AN
-        const response = await listLeaveController(id, date, FN_or_AN)
+        const fnOrAn = req.query.FN_or_AN
+        const response = await listLeaveController(id, date, fnOrAn)
         res.status(200).json(response)
     }
     catch (error) {
@@ -40,13 +40,13 @@ export const updateLeaveHandler = async (req, res) => {
     try {
         const id = req.params.id;
         const date = req.body.date;
-        const FN_or_AN = req.body.FN_or_AN;
-        const updated = await updateLeaveController(id, date, FN_or_AN)
+        const fnOrAn = req.body.fnOrAn;
+        const updated = await updateLeaveController(id, date, fnOrAn)
         if (!updated) {
-            res.status(404).json({ errorMessage: "Leave failed" })
+            res.status(400).json({ errorMessage: "Invalid request" })
             return
         }
-        res.status(200).json({ successMessage: "Marked leave" })
+        res.status(200).json({ successMessage: "Leave updated" })
     }
     catch (error) {
         console.log("An unexpected error occured while updating leave ", error.message)
@@ -57,13 +57,13 @@ export const updateLeaveHandler = async (req, res) => {
 export const insertLeaveHandler = async (req, res) => {
     try {
         const date = req.body.date;
-        const FN_or_AN = req.body.FN_or_AN;
-        const inserted = await insertLeaveController(date, FN_or_AN)
+        const fnOrAn = req.body.fnOrAn;
+        const inserted = await insertLeaveController(date, fnOrAn)
         if (!inserted) {
-            res.status(404).json({ errorMessage: "Leave failed" })
+            res.status(400).json({ errorMessage: "Invalid request" })
             return
         }
-        res.status(200).json({ successMessage: "Marked leave" })
+        res.status(200).json({ successMessage: "Leave marked successfully" })
     }
     catch (error) {
         console.log("An unexpected error occured while marking leave", error.message)
@@ -75,13 +75,13 @@ export const deleteLeaveHandler = async (req, res) => {
     try {
         const id = req.params.id;
         const date = req.body.date;
-        const FN_or_AN = req.body.FN_or_AN;
-        const deleted = await deleteLeaveController(id, date, FN_or_AN)
+        const fnOrAn = req.body.fnOrAn;
+        const deleted = await deleteLeaveController(id, date, fnOrAn)
         if (!deleted) {
-            res.status(404).json({ errorMessage: "Leave failed" })
+            res.status(404).json({ errorMessage: "Leave with this id does not exist" })
             return
         }
-        res.status(200).json({ successMessage: "Marked leave" })
+        res.status(200).json({ successMessage: "Leave deleted successfully" })
     }
     catch (error) {
         console.log("An unexpected error occured while deleting leave", error.message)
