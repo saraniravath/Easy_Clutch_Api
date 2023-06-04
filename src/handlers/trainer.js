@@ -26,7 +26,7 @@ export const listLeaveHandler = async (req, res) => {
     try {
         const id = req.query.id
         const date = req.query.date
-        const fnOrAn = req.query.FN_or_AN
+        const fnOrAn = req.query.fnOrAn
         const response = await listLeaveController(id, date, fnOrAn)
         res.status(200).json(response)
     }
