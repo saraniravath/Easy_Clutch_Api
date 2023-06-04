@@ -17,8 +17,8 @@ export const listVehiclesHandler = async (req, res) => {
 export const updateVehiclesHandler = async (req, res) => {
     try {
         const id = req.params.id;
-        const modelName = req.body.model_name;
-        const registrationNumber = req.body.registration_number;
+        const modelName = req.body.modelName;
+        const registrationNumber = req.body.registrationNumber;
         const type = req.body.type;
         const updated = await updateVehiclesController(id, modelName, registrationNumber, type)
         if (!updated) {
@@ -35,8 +35,8 @@ export const updateVehiclesHandler = async (req, res) => {
 
 export const insertVehiclesHandler = async (req, res) => {
     try {
-        const modelName = req.body.model_name;
-        const registrationNumber = req.body.registration_number;
+        const modelName = req.body.modelName;
+        const registrationNumber = req.body.registrationNumber;
         const type = req.body.type;
         const inserted = await insertVehiclesController(modelName, registrationNumber, type)
         if (!inserted) {
