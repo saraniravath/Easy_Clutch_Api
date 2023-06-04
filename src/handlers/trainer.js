@@ -74,9 +74,7 @@ export const insertLeaveHandler = async (req, res) => {
 export const deleteLeaveHandler = async (req, res) => {
     try {
         const id = req.params.id;
-        const date = req.body.date;
-        const fnOrAn = req.body.fnOrAn;
-        const deleted = await deleteLeaveController(id, date, fnOrAn)
+        const deleted = await deleteLeaveController(id)
         if (!deleted) {
             res.status(404).json({ errorMessage: "Leave with this id does not exist" })
             return

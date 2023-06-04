@@ -45,6 +45,6 @@ export const insertLeaveController = async (date, fnOrAn) => {
 
 }
 
-export const deleteLeaveController = (id, date, fnOrAn) => {
-    return deleteLeaveModel(id, date, fnOrAn)
+export const deleteLeaveController = (id) => {
+    return deleteLeaveModel(id)
 }

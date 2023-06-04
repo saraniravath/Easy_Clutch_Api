@@ -9,17 +9,17 @@ export const getTrainerByUsername = async (username) => {
     return {};
 }
 
-export const listLeaveModel = async (date, FN_or_AN) => {
-    const basicQuery = "SELECT * FROM `leave`"
+export const listLeaveModel = async (date, fnOrAn) => {
+    const basicQuery = "SELECT date, FN_or_AN fnOrAn FROM `leave`"
     const values = []
     const fields = []
     if (date) {
         fields.push('date=?')
         values.push(date)
     }
-    if (FN_or_AN) {
+    if (fnOrAn) {
         fields.push('FN_or_AN=?')
-        values.push(FN_or_AN)
+        values.push(fnOrAn)
     }
     const whereQuery = fields.join(" AND ")
     let sqlQuery
@@ -33,23 +33,23 @@ export const listLeaveModel = async (date, FN_or_AN) => {
 }
 
 
-export const updateLeaveModel = async (id, date, FN_or_AN) => {
-    console.log(date, FN_or_AN)
+export const updateLeaveModel = async (id, date, fnOrAn) => {
+    console.log(date, fnOrAn)
     const sqlQuery = "UPDATE `leave` SET date = ?, FN_or_AN = ? WHERE id = ?"
-    const result = await pool.query(sqlQuery, [date, FN_or_AN, id])
+    const result = await pool.query(sqlQuery, [date, fnOrAn, id])
     if (result[0].affectedRows === 0) {
         return false
     }
     return true
 }
 
-export const insertLeaveModel = async (date, FN_or_AN) => {
+export const insertLeaveModel = async (date, fnOrAn) => {
     const sqlQuery = "INSERT INTO `leave` (date, FN_or_AN) VALUES (?, ?)"
-    const result = await pool.query(sqlQuery, [date, FN_or_AN])
+    const result = await pool.query(sqlQuery, [date, fnOrAn])
     return true
 }
 
-export const deleteLeaveModel = async (id, date, FN_or_AN) => {
+export const deleteLeaveModel = async (id) => {
     const sqlQuery = "DELETE from `leave` WHERE id =?"
     const result = await pool.query(sqlQuery, [id])
     if (result[0].affectedRows === 0) {
