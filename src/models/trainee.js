@@ -100,3 +100,11 @@ export const getUserByUsername = async (username) => {
         return rows[0];
     return {};
 }
+
+
+export const getBookingList = async () => {
+    const [rows, fields] = await pool.query("SELECT trainee.id traineeId,trainee.first_name firstName,trainee.last_name lastName,vehicle_type.name vehicleType FROM trainee,package,vehicle_type WHERE trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle_type.id AND package.active=1");
+    if (rows)
+        return rows;
+    return [];
+}

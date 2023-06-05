@@ -38,7 +38,7 @@ export const activatePackage = async (id) => {
 }
 
 export const getRequestPackage = async () => {
-    const [rows, fields] = await pool.query("SELECT package.*,trainee.first_name,trainee.last_name,vehicle.type FROM package,trainee,vehicle WHERE package.active=0 AND trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle.id");
+    const [rows, fields] = await pool.query("SELECT package.id,trainee.first_name firstName,trainee.last_name lastName,vehicle_type.name vehicleType,package.transaction_id transactionId,package.trainee_id traineeId FROM package,trainee,vehicle_type WHERE package.active=0 AND trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle_type.id");
     if (rows) {
         return rows;
     }
