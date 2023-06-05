@@ -4,8 +4,8 @@ import { addScheduleHandler, getScheduleHandler, listPackagesHandler, listPaymen
 import { loginHandler, otpVerificationHandler, traineeRegisterHandler } from './handlers/trainee.js';
 import cors from 'cors';
 import { commonAuth, traineeAuth, trainerAuth } from './middleware/auth.js';
-import { trainerLoginHandler } from './handlers/trainer.js';
 import dotenv from 'dotenv';
+import { deleteLeaveHandler, insertLeaveHandler, listLeaveHandler, trainerLoginHandler, updateLeaveHandler } from './handlers/trainer.js';
 dotenv.config();
 
 
@@ -27,6 +27,12 @@ app.get("/vehicles", commonAuth, listVehiclesHandler)
 app.put("/vehicles/:id", trainerAuth, updateVehiclesHandler)
 app.post("/vehicles", trainerAuth, insertVehiclesHandler)
 app.delete('/vehicles/:id', trainerAuth, deleteVehiclesHandler)
+
+app.get("/leave", listLeaveHandler)
+app.put("/leave/:id", updateLeaveHandler)
+app.post("/leave", insertLeaveHandler)
+app.delete('/leave/:id', deleteLeaveHandler)
+
 
 app.post('/trainees/register', traineeRegisterHandler)
 app.post('/trainees/register/verify', otpVerificationHandler)
