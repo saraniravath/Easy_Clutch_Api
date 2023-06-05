@@ -1,4 +1,4 @@
-import { getTrainerByUsername } from "../models/trainer.js";
+import { getTrainerByUsername, deleteLeaveModel, insertLeaveModel, listLeaveModel, updateLeaveModel } from "../models/trainer.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -22,4 +22,29 @@ export const trainerLoginController = async (loginDetails) => {
         return response;
     }
     return false;
-} 
+}
+
+export const listLeaveController = (date, fnOrAn) => {
+    return listLeaveModel(date, fnOrAn)
+}
+
+export const updateLeaveController = async (id, date, fnOrAn) => {
+    const checkLeave = await listLeaveModel(date, fnOrAn)
+    if (checkLeave[0]) {
+        return 0
+    } else
+        return updateLeaveModel(id, date, fnOrAn);
+}
+
+export const insertLeaveController = async (date, fnOrAn) => {
+    const checkLeave = await listLeaveModel(date, fnOrAn)
+    if (checkLeave[0]) {
+        return 0
+    } else
+        return insertLeaveModel(date, fnOrAn);
+
+}
+
+export const deleteLeaveController = (id) => {
+    return deleteLeaveModel(id)
+}
