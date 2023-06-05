@@ -10,7 +10,7 @@ export const getTrainerByUsername = async (username) => {
 }
 
 export const listLeaveModel = async (date, fnOrAn) => {
-    const basicQuery = "SELECT date, FN_or_AN fnOrAn FROM `leave`"
+    const basicQuery = "SELECT id,date, FN_or_AN fnOrAn FROM `leave`"
     const values = []
     const fields = []
     if (date) {
@@ -34,7 +34,6 @@ export const listLeaveModel = async (date, fnOrAn) => {
 
 
 export const updateLeaveModel = async (id, date, fnOrAn) => {
-    console.log(date, fnOrAn)
     const sqlQuery = "UPDATE `leave` SET date = ?, FN_or_AN = ? WHERE id = ?"
     const result = await pool.query(sqlQuery, [date, fnOrAn, id])
     if (result[0].affectedRows === 0) {
