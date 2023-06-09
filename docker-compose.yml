@@ -1,0 +1,53 @@
+version: '3' #docker compose version
+services:
+  app:
+    container_name: easy_clutch
+    build: . #builds Dockerfile
+    ports:
+      - 5000:5000
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - easy_clutch_mysql
+    networks:
+      - easy_clutch
+
+  easy_clutch_mysql:
+    image: mysql:5.7
+    container_name: easy_clutch_db_mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_HOST=${DB_HOST}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - database_mysql:/var/lib/mysql
+    networks:
+      - easy_clutch
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    depends_on:
+      - easy_clutch_mysql
+    environment:
+      - PMA_HOST=easy_clutch_mysql # Note the "easy_clutch_mysql". Must be the name of the what you used as the mysql service.
+      - PMA_USER=${DB_USER}
+      - PMA_PORT=${DB_PORT}
+      - PMA_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 9090:80
+    restart: always
+    networks:
+      - easy_clutch
+
+volumes:
+  api:
+  database_mysql: 
+networks: # Networks to be created to facilitate communication between containers
+  easy_clutch:
+    driver: bridge

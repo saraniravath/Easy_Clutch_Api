@@ -8,6 +8,7 @@ import {
 import { sendEmail } from "../util/email.js";
 import { generateOTP } from "../util/otp.js";
 import bcrypt from "bcrypt";
+import env from "../config/load.js";
 
 
 export const traineeRegisterController = async (traineeDetails) => {
@@ -48,16 +49,13 @@ export const loginController = async (loginDetails) => {
     const trainee = await getUserByUsername(loginDetails.username);
     const username = loginDetails.username;
     if (loginDetails && trainee && (await bcrypt.compare(loginDetails.password, trainee.password))) {
-        // Create token
         const token = jwt.sign(
             { username, userId: trainee.id, firstName: trainee.firstname, lastName: trainee.lastname, userType: "trainee" },
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: "2h",
-            }
+            env.authTokenKey,
+            { expiresIn: env.authTokenExpiry }
         );
         const response = {
-            token, username
+            token: `Bearer ${token}`, username
         }
         return response;
     }

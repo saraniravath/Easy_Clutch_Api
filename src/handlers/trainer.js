@@ -40,9 +40,17 @@ export const updateLeaveHandler = async (req, res) => {
         const id = req.params.id;
         const date = req.body.date;
         const fnOrAn = req.body.fnOrAn;
+        if(fnOrAn !== "FN" && fnOrAn !== "AN") {
+            res.status(400).json({ errorMessage: "fnOrAn should be either FN or AN" })
+            return 
+        }
         const updated = await updateLeaveController(id, date, fnOrAn)
-        if (!updated) {
-            res.status(400).json({ errorMessage: "Invalid request" })
+        if (updated === 0) {
+            res.status(400).json({ errorMessage: "This session has already being marked as leave" })
+            return
+        }
+        if (updated === -1) {
+            res.status(400).json({ errorMessage: "Invalid leave id" })
             return
         }
         res.status(200).json({ successMessage: "Leave updated" })
@@ -57,15 +65,19 @@ export const insertLeaveHandler = async (req, res) => {
     try {
         const date = req.body.date;
         const fnOrAn = req.body.fnOrAn;
+        if(fnOrAn !== "FN" && fnOrAn !== "AN") {
+            res.status(400).json({ errorMessage: "fnOrAn should be either FN or AN" })
+            return 
+        }
         const inserted = await insertLeaveController(date, fnOrAn)
-        if (!inserted) {
-            res.status(400).json({ errorMessage: "Invalid request" })
+        if (inserted === 0) {
+            res.status(400).json({ errorMessage: "This session has already being marked as leave" })
             return
         }
         res.status(200).json({ successMessage: "Leave marked successfully" })
     }
     catch (error) {
-        console.log("An unexpected error occured while marking leave", error.message)
+        console.log("An unexpected error occured while marking leave ", error.message)
         res.status(500).json({ errorMessage: "An unexpected error occured. Check server logs" });
     }
 }
