@@ -2,7 +2,7 @@ import {
     activatePackage, addScheduleModel, checkVehicleActive, checkVehicleUsage, getAvailableSession, getRemainingSession, getRequestPackage,
     getScheduleForTraineeModel,
     getScheduleForTrainerModel,
-    insertPackageModel, listPackagesModel, updatePackagesModel
+    insertPackageModel, listPackagesModel, updatePackagesModel, checkVehicleAllowedInPackage
 } from "../models/package.js"
 
 export const listPackagesController = (name) => {
@@ -31,21 +31,21 @@ export const verifyPackagePaymentController = async (id) => {
 }
 
 
-export const addScheduleController = async (id, scheduleDetails) => {
-    const vehicleActive = await checkVehicleActive(scheduleDetails.vehicleNameId)
-    const remainingSessions = await getRemainingSession(id)
-    const vehicleBooked = await checkVehicleUsage(scheduleDetails)
+export const addScheduleController = async (packageId, scheduleDetails) => {
+    const vehicleActive = await checkVehicleActive(scheduleDetails.vehicleId)
+    const remainingSessions = await getRemainingSession(packageId)
+    const vehicleFree = await checkVehicleUsage(scheduleDetails)
+    const vehicleAllowedInPackage = await checkVehicleAllowedInPackage(scheduleDetails.vehicleId, packageId)
     if (remainingSessions < 1)
         return 1
-    else if (!vehicleActive || !vehicleBooked)
+    else if (!vehicleActive || !vehicleFree)
         return 2
+    else if(vehicleAllowedInPackage === 0)
+        return 3
     else {
-        const response = await addScheduleModel(id, scheduleDetails)
-        if (response) {
-            return 3
-        }
+        await addScheduleModel(packageId, scheduleDetails)
+        return 4
     }
-    return 0;
 }
 
 export const getScheduleController = (user) => {

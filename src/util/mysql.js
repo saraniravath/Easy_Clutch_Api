@@ -1,13 +1,24 @@
 import mysql2 from 'mysql2';
-import dotenv from 'dotenv';
-dotenv.config()
+import env from '../config/load.js';
 
-const pool = mysql2.createPool({
+export const pool = mysql2.createPool({
     connectionLimit: 4,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD, 
-});
+    host: env.dbHost,
+    database: env.dbName,
+    user: env.dbUser,
+    password: env.dbPassword,
+    timezone: 'Z'
+}).promise();
 
-export default pool.promise();
+export const checkDatabaseConnection = async () => {
+    try {
+        const connection = await pool.getConnection();
+        await connection.ping();
+        connection.release(); 
+        console.log('Database connection is healthy');
+    } catch (error) {
+        console.error('Error while connecting to database:', error);
+        throw new Error('Database connection failure')
+    }
+}
+

@@ -33,17 +33,15 @@ export const updatePackagesHandler = async (req, res) => {
 }
 
 
-export const notifypaymentHandler = async (req, res) => {
+export const notifyPaymentHandler = async (req, res) => {
     try {
         const id = req.user.userId;
-        if (req.user.userType === "trainee") {
-            const insert = await insertPackageController(id, req.body)
-            if (insert) {
-                res.status(200).json({ successMessage: "The package was successfully inserted" })
-                return true;
-            }
+        const sessionsAvailable = await insertPackageController(id, req.body)
+        if (sessionsAvailable) {
+            res.status(200).json({ successMessage: "Payment was successfully notified" })
+            return true;
         }
-
+        res.status(400).json({ successMessage: "No sessions available per package" })
     }
     catch (error) {
         console.log("An unexpected error occured while notifying packages ", error.message)
@@ -54,12 +52,7 @@ export const notifypaymentHandler = async (req, res) => {
 export const listPaymentNotificationsHandler = async (req, res) => {
     try {
         const response = await displayRequestPackageController()
-        if (response) {
-            res.status(200).json(response)
-            return response
-        }
-        res.status(404).json({ errorMessage: "Package not found for inserting or displaying package" })
-        return false
+        res.status(200).json(response)
     }
     catch (error) {
         console.log("An unexpected error occured while notifying packages ", error.message)
@@ -77,7 +70,6 @@ export const verifyPackagePaymentHandler = async (req, res) => {
             return;
         }
         res.status(404).json({ errorMessage: "A package with this id does not exist" })
-        return false;
     }
     catch (error) {
         console.log("An unexpected error occured while verifying payment: ", error.message)
@@ -88,17 +80,16 @@ export const verifyPackagePaymentHandler = async (req, res) => {
 
 export const addScheduleHandler = async (req, res) => {
     try {
-        const id = req.params.packageId;
-        const code = await addScheduleController(id, req.body)
-        if (code === 3) {
+        const packageId = req.params.packageId;
+        const code = await addScheduleController(packageId, req.body)
+        if (code === 4)
             res.status(200).json({ successMessage: "The schedule was successfully added" })
-            return;
-        }
-        if (code === 0 || code === 1)
-            res.status(404).json({ errorMessage: "A package with this id does not exist" })
+        if (code === 1)
+            res.status(404).json({ errorMessage: "No remaining sessions available for this package. Buy a new package to book new sessions." })
         if (code === 2)
-            res.status(400).json({ errorMessage: "Vehicle unavailiable" })
-        return false;
+            res.status(400).json({ errorMessage: "This vehicle is currently not available" })
+        if (code === 3)
+            res.status(400).json({ errorMessage: "This vehicle does not belong to this package" })
     }
     catch (error) {
         console.log("An unexpected error occured while adding schedule: ", error.message)

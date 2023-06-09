@@ -1,4 +1,4 @@
-import pool from "../util/mysql.js"
+import { pool } from "../util/mysql.js"
 
 export const listPackagesModel = async (name) => {
     const basicQuery = "SELECT * FROM vehicle_type"
@@ -39,18 +39,15 @@ export const activatePackage = async (id) => {
 
 export const getRequestPackage = async () => {
     const [rows, fields] = await pool.query("SELECT package.id,trainee.first_name firstName,trainee.last_name lastName,vehicle_type.name vehicleType,package.transaction_id transactionId,package.trainee_id traineeId FROM package,trainee,vehicle_type WHERE package.active=0 AND trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle_type.id");
-    if (rows) {
+    if (rows.length > 0) {
         return rows;
     }
-    return 0;
+    return [];
 }
 
 export const getAvailableSession = async () => {
-    const [rows, fields] = await pool.query("SELECT session_per_package FROM trainer");
-    if (rows) {
-        return rows[0].session_per_package;
-    }
-    return 0;
+    const [rows, fields] = await pool.query("SELECT session_per_package sessionPerPackage FROM trainer");
+    return rows[0].sessionPerPackage;
 }
 
 export const insertPackageModel = async (id, packageDetails, availiable) => {
@@ -63,52 +60,63 @@ export const insertPackageModel = async (id, packageDetails, availiable) => {
 }
 
 export const getRemainingSession = async (id) => {
-    const [rows, fields] = await pool.query("SELECT remaining_sessions FROM package WHERE id=? AND active=1", [id]);
+    const [rows, fields] = await pool.query("SELECT remaining_sessions remainingSessions FROM package WHERE id=? AND active=1", [id]);
     if (rows[0]) {
-        return rows[0].remaining_sessions
+        return rows[0].remainingSessions
     }
     return 0
 }
 
 export const checkVehicleActive = async (id) => {
     const [rows, fields] = await pool.query("SELECT * FROM vehicle WHERE id=? AND active=1", [id]);
-    if (rows[0]) {
+    if (rows.length > 0) {
         return true
     }
-    return 0
+    return false
 }
 
 export const checkVehicleUsage = async (scheduleDetails) => {
     const [rows, fields] = await pool.query("SELECT * FROM booked_session WHERE vehicle_id=? AND date = ? AND FN_or_AN = ?",
-        [scheduleDetails.vehicleNameId, scheduleDetails.date, scheduleDetails.time]);
-    if (rows[0]) {
-        return 0
-    }
-    return true
-}
-
-export const addScheduleModel = async (id, scheduleDetails) => {
-    const insert = await pool.query("INSERT INTO booked_session(package_id, date, FN_or_AN, vehicle_id) values(?,?,?,?)",
-        [id, scheduleDetails.date, scheduleDetails.time, scheduleDetails.vehicleNameId]);
-    await pool.query("UPDATE package SET remaining_sessions=remaining_sessions-1 WHERE id=?", [id]);
-    if (insert[0].affectedRows === 0) {
+        [scheduleDetails.vehicleId, scheduleDetails.date, scheduleDetails.time]);
+    if (rows.length > 0) {
         return false
     }
     return true
 }
 
+export const addScheduleModel = async (id, scheduleDetails) => {
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        await connection.query("INSERT INTO booked_session(package_id, date, FN_or_AN, vehicle_id) values(?,?,?,?)",
+            [id, scheduleDetails.date, scheduleDetails.time, scheduleDetails.vehicleId]);
+        await connection.query("UPDATE package SET remaining_sessions=remaining_sessions-1 WHERE id=?", [id]);
+        await connection.commit()
+        connection.release()
+    } catch (error) {
+        await connection.rollback()
+        connection.release()
+        throw error
+    }
+}
+
 export const getScheduleForTrainerModel = async () => {
-    const [rows, fields] = await pool.query("SELECT bs.date, bs.FN_or_AN session, trainee.first_name firstName,trainee.last_name lastName, vehicle.model_name modelName, vehicle.registration_number registrationNumber FROM booked_session bs,package,trainee,vehicle WHERE bs.package_id=package.id AND package.trainee_id=trainee.id AND bs.vehicle_id=vehicle.id;");
-    if (rows[0]) {
+    const [rows, fields] = await pool.query("SELECT DATE_FORMAT(bs.date, '%Y-%m-%d') date, bs.FN_or_AN session, trainee.first_name firstName,trainee.last_name lastName, vehicle.model_name modelName, vehicle.registration_number registrationNumber FROM booked_session bs,package,trainee,vehicle WHERE bs.package_id=package.id AND package.trainee_id=trainee.id AND bs.vehicle_id=vehicle.id;");
+    if (rows.length > 0) {
         return rows
     }
-    return {}
+    return []
 }
 
 export const getScheduleForTraineeModel = async () => {
-    const [rows, fields] = await pool.query("SELECT bs.date, bs.FN_or_AN session, trainee.id traineeId, vehicle.model_name modelName FROM booked_session bs,package,trainee,vehicle WHERE bs.package_id=package.id AND package.trainee_id=trainee.id AND bs.vehicle_id=vehicle.id");
-    if (rows[0]) {
+    const [rows, fields] = await pool.query("SELECT DATE_FORMAT(bs.date, '%Y-%m-%d') date, bs.FN_or_AN session, trainee.id traineeId, vehicle.model_name modelName FROM booked_session bs,package,trainee,vehicle WHERE bs.package_id=package.id AND package.trainee_id=trainee.id AND bs.vehicle_id=vehicle.id");
+    if (rows.length > 0) {
         return rows
     }
-    return {}
+    return []
+}
+
+export const checkVehicleAllowedInPackage = async (vehicleId, packageId) => {
+    const [rows, fields] = await pool.query("SELECT COUNT(1) vehicleAllowed FROM vehicle, package, vehicle_type WHERE vehicle.id = ? AND vehicle.type = vehicle_type.id AND vehicle_type.id = package.package_vehicle_type_id AND package.id = ?", [vehicleId, packageId])
+    return rows[0].vehicleAllowed
 }

@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
-dotenv.config()
-
+import env from "../config/load.js";
 
 export const traineeAuth = (req, res, next) => {
     const token = req.headers["authorization"];
@@ -10,7 +8,7 @@ export const traineeAuth = (req, res, next) => {
         return res.status(403).json({ errorMessage: 'Invalid token or user-type' });
     }
     try {
-        const decoded = jwt.verify(token.split(" ")[1], process.env.TOKEN_KEY);
+        const decoded = jwt.verify(token.split(" ")[1], env.authTokenKey);
         if (decoded.userType === 'trainee') {
             req.user = decoded;
             return next();
@@ -30,7 +28,7 @@ export const trainerAuth = (req, res, next) => {
         return res.status(403).json({ errorMessage: "Invalid token or userType" });
     }
     try {
-        const decoded = jwt.verify(token.split(" ")[1], process.env.TOKEN_KEY);
+        const decoded = jwt.verify(token.split(" ")[1], env.authTokenKey);
         if (decoded.userType === 'trainer') {
             req.user = decoded;
             return next();
@@ -49,7 +47,7 @@ export const commonAuth = (req, res, next) => {
         return res.status(403).json({ errorMessage: "Invalid token or userType" });
     }
     try {
-        const decoded = jwt.verify(token.split(" ")[1], process.env.TOKEN_KEY);
+        const decoded = jwt.verify(token.split(" ")[1], env.authTokenKey);
         req.user = decoded;
     }
     catch (err) {

@@ -1,4 +1,4 @@
-import pool from "../util/mysql.js"
+import { pool } from "../util/mysql.js"
 
 
 export const getTraineeByUsername = async (username) => {
