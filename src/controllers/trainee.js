@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import {
     addTraineeDetails, checkIfOtpIsValid, getTraineeByUsername,
+    getTraineeList,
     getBookingList,
     getUserByUsername,
     getUserId, storeOtp, updateActive, updateTraineeDetails
@@ -63,6 +64,11 @@ export const loginController = async (loginDetails) => {
 }
 
 
+export const getTraineeListController = () => {
+    return getTraineeList();
+}
+
 export const getBookingListController = () => {
     return getBookingList();
 }
+

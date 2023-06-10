@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { deleteVehiclesHandler, insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler } from './handlers/vehicle.js';
 import { addScheduleHandler, getScheduleHandler, listPackagesHandler, listPaymentNotificationsHandler, notifyPaymentHandler, updatePackagesHandler, verifyPackagePaymentHandler } from './handlers/package.js';
-import { getBookingListHandler, loginHandler, otpVerificationHandler, traineeRegisterHandler } from './handlers/trainee.js';
+import { getBookingListHandler, loginHandler, otpVerificationHandler, traineeRegisterHandler, getTraineeListHandler } from './handlers/trainee.js';
 import { commonAuth, traineeAuth, trainerAuth } from './middleware/auth.js';
 import { deleteLeaveHandler, insertLeaveHandler, listLeaveHandler, trainerLoginHandler, updateLeaveHandler } from './handlers/trainer.js';
 import env from './config/load.js';
@@ -33,7 +33,7 @@ app.put("/leaves/:id", trainerAuth, updateLeaveHandler)
 app.post("/leaves", trainerAuth, insertLeaveHandler)
 app.delete('/leaves/:id', trainerAuth, deleteLeaveHandler)
 
-
+app.get(`/trainees`, trainerAuth, getTraineeListHandler)
 app.post('/trainees/register', traineeRegisterHandler)
 app.post('/trainees/register/verify', otpVerificationHandler)
 app.post(`/trainees/login`, loginHandler)
@@ -42,8 +42,8 @@ app.get(`/trainees/bookings`, trainerAuth, getBookingListHandler)
 app.post('/trainers/login', trainerLoginHandler)
 
 app.use((req, res, next) => {
-    res.status(404).json({ errorMessage: "URL not found"})
-  })
+    res.status(404).json({ errorMessage: "URL not found" })
+})
 
 const startServerIfHealthy = async () => {
     try {
@@ -51,7 +51,7 @@ const startServerIfHealthy = async () => {
         app.listen(env.serverPort, () => {
             console.log("Listening on port ", env.serverPort);
         })
-    } catch(exception) {
+    } catch (exception) {
         console.log("Error while starting server ", exception.message)
     }
 }

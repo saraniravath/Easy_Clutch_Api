@@ -50,9 +50,9 @@ export const getAvailableSession = async () => {
     return rows[0].sessionPerPackage;
 }
 
-export const insertPackageModel = async (id, packageDetails, availiable) => {
+export const insertPackageModel = async (id, packageDetails, available) => {
     const result = await pool.query("INSERT INTO package(trainee_id,transaction_id,package_vehicle_type_id,remaining_sessions) values(?,?,?,?)",
-        [id, packageDetails.transactionId, packageDetails.vehicleType, availiable]);
+        [id, packageDetails.transactionId, packageDetails.vehicleType, available]);
     if (result[0].affectedRows === 0) {
         return false
     }
