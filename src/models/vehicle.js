@@ -1,7 +1,7 @@
-import pool from "../util/mysql.js"
+import { pool } from "../util/mysql.js"
 
 export const listVehiclesModel = async (type, modelName, registrationNumber) => {
-    const basicQuery = "SELECT * FROM vehicle WHERE active=1"
+    const basicQuery = "SELECT id, model_name modelName, registration_number registrationNumber, type FROM vehicle WHERE active=1"
     const values = []
     const fields = []
     if (type) {

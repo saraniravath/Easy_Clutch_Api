@@ -2,12 +2,14 @@ import jwt from "jsonwebtoken";
 import {
     addTraineeDetails, checkIfOtpIsValid, getTraineeByUsername,
     getTraineeList,
+    getBookingList,
     getUserByUsername,
     getUserId, storeOtp, updateActive, updateTraineeDetails
 } from "../models/trainee.js";
 import { sendEmail } from "../util/email.js";
 import { generateOTP } from "../util/otp.js";
 import bcrypt from "bcrypt";
+import env from "../config/load.js";
 
 
 export const traineeRegisterController = async (traineeDetails) => {
@@ -48,16 +50,13 @@ export const loginController = async (loginDetails) => {
     const trainee = await getUserByUsername(loginDetails.username);
     const username = loginDetails.username;
     if (loginDetails && trainee && (await bcrypt.compare(loginDetails.password, trainee.password))) {
-        // Create token
         const token = jwt.sign(
             { username, userId: trainee.id, firstName: trainee.firstname, lastName: trainee.lastname, userType: "trainee" },
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: "2h",
-            }
+            env.authTokenKey,
+            { expiresIn: env.authTokenExpiry }
         );
         const response = {
-            token, username
+            token: `Bearer ${token}`, username
         }
         return response;
     }
@@ -65,6 +64,11 @@ export const loginController = async (loginDetails) => {
 }
 
 
-export const getTraineeListController=async ()=>{
-    return await getTraineeList();
+export const getTraineeListController = () => {
+    return getTraineeList();
 }
+
+export const getBookingListController = () => {
+    return getBookingList();
+}
+
