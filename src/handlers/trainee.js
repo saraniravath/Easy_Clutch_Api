@@ -1,4 +1,4 @@
-import { loginController, otpVerificationController, traineeRegisterController } from "../controllers/trainee.js";
+import { getTraineeListController, loginController, otpVerificationController, traineeRegisterController } from "../controllers/trainee.js";
 
 export const traineeRegisterHandler = async (req, res) => {
     try {
@@ -53,4 +53,19 @@ export const loginHandler = async (req, res) => {
         res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
     }
 
+}
+
+export const getTraineeListHandler=async(req,res)=>{
+    try{
+        const response=await getTraineeListController()
+        if(response){
+            res.status(200).json(response)
+            return
+        }
+        return 0;
+    }
+    catch(e){
+        console.log("An unexpected error occured while listing ", e.message)
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
+    }
 }

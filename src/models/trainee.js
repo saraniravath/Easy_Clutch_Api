@@ -100,3 +100,11 @@ export const getUserByUsername = async (username) => {
         return rows[0];
     return {};
 }
+
+
+export const getTraineeList = async (req,res)=>{
+    const [rows, fields] = await pool.query("SELECT * FROM trainee WHERE active = 1");
+    if (rows)
+        return rows;
+    return {};
+}

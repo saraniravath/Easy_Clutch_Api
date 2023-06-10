@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import {
     addTraineeDetails, checkIfOtpIsValid, getTraineeByUsername,
+    getTraineeList,
     getUserByUsername,
     getUserId, storeOtp, updateActive, updateTraineeDetails
 } from "../models/trainee.js";
@@ -64,3 +65,6 @@ export const loginController = async (loginDetails) => {
 }
 
 
+export const getTraineeListController=async ()=>{
+    return await getTraineeList();
+}
