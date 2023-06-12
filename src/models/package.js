@@ -59,10 +59,10 @@ export const insertPackageModel = async (id, packageDetails, available) => {
     return true
 }
 
-export const getRemainingSession = async (id) => {
-    const [rows, fields] = await pool.query("SELECT remaining_sessions remainingSessions FROM package WHERE id=? AND active=1", [id]);
+export const getActivePackageIdForVehicle = async (vehicleId, traineeId) => {
+    const [rows, fields] = await pool.query("SELECT package.id FROM package, vehicle, vehicle_type WHERE vehicle.id = ? AND vehicle_type.id = vehicle.type AND package.package_vehicle_type_id = vehicle.type AND package.remaining_sessions > 0 AND package.trainee_id = ?", [vehicleId, traineeId]);
     if (rows[0]) {
-        return rows[0].remainingSessions
+        return rows[0].id
     }
     return 0
 }
