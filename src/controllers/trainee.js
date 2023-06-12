@@ -68,7 +68,9 @@ export const getTraineeListController = () => {
     return getTraineeList();
 }
 
-export const getBookingListController = () => {
-    return getBookingList();
+export const getBookingListController = (userType, userId, active) => {
+    if(userType === "trainee")
+        return getBookingList(active, userId);    
+    return getBookingList(active);
 }
 
