@@ -53,3 +53,13 @@ export const deleteVehiclesModel = async (id) => {
     }
     return true
 }
+
+export const getAvailableVehiclesInSession = async (sessionDetails) => {
+    const [rows] = await pool.query("SELECT vehicle.id, vehicle.model_name modelName FROM vehicle WHERE vehicle.id NOT IN (SELECT vehicle_id FROM booked_session WHERE date = ? AND FN_or_AN = ?) AND vehicle.type = ? AND vehicle.active = 1", [sessionDetails.date, sessionDetails.time, sessionDetails.vehicleType])
+    return rows
+}
+
+export const getAvailableVehicleTypesForUser = async (userId) => {
+    const [rows] = await pool.query("SELECT vehicle_type.id, vehicle_type.name FROM vehicle_type WHERE vehicle_type.id IN ( SELECT package_vehicle_type_id FROM package WHERE active=1 AND trainee_id=? )", [userId])
+    return rows
+}

@@ -108,8 +108,8 @@ export const getScheduleForTrainerModel = async () => {
     return []
 }
 
-export const getScheduleForTraineeModel = async () => {
-    const [rows, fields] = await pool.query("SELECT DATE_FORMAT(bs.date, '%Y-%m-%d') date, bs.FN_or_AN session, trainee.id traineeId, vehicle.model_name modelName FROM booked_session bs,package,trainee,vehicle WHERE bs.package_id=package.id AND package.trainee_id=trainee.id AND bs.vehicle_id=vehicle.id");
+export const getScheduleForTraineeModel = async (traineeId) => {
+    const [rows, fields] = await pool.query("SELECT DISTINCT DATE_FORMAT(bs.date, '%Y-%m-%d') AS date, bs.FN_or_AN AS session, vehicle.model_name AS modelName FROM booked_session bs JOIN package ON bs.package_id = package.id JOIN trainee ON package.trainee_id = trainee.id JOIN vehicle ON bs.vehicle_id = vehicle.id WHERE package.trainee_id = ?", [traineeId]);
     if (rows.length > 0) {
         return rows
     }

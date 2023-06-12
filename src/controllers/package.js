@@ -49,7 +49,7 @@ export const addScheduleController = async (scheduleDetails) => {
 
 export const getScheduleController = (user) => {
     if (user.userType === 'trainee') {
-        return getScheduleForTraineeModel()
+        return getScheduleForTraineeModel(user.userId)
     } else {
         return getScheduleForTrainerModel()
     }

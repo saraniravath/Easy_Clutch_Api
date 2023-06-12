@@ -1,4 +1,4 @@
-import { insertVehiclesController, listVehiclesController, updateVehiclesController, deleteVehicleController } from "../controllers/vehicle.js"
+import { insertVehiclesController, listVehiclesController, updateVehiclesController, deleteVehicleController, getAvailableVehiclesInSessionController, getAvailableVehicleTypesForUserController } from "../controllers/vehicle.js"
 
 export const listVehiclesHandler = async (req, res) => {
     try {
@@ -63,6 +63,33 @@ export const deleteVehiclesHandler = async (req, res) => {
     }
     catch (error) {
         console.log("An unexpected error occured while deleting vehicle", error.message)
+        res.status(500).json({ errorMessage: "An unexpected error occured. Check server logs" });
+    }
+}
+
+export const getAvailableVehiclesInSessionHandler = async (req, res) => {
+    try {
+        const sessionDetails = {
+            date: req.query.date,
+            time: req.query.time,
+            vehicleType: req.query.vehicleType
+        }
+        const vehicles = await getAvailableVehiclesInSessionController(sessionDetails)
+        res.status(200).json(vehicles)
+    }
+    catch (error) {
+        console.log("An unexpected error occured while listing available vehicles in a session: ", error.message)
+        res.status(500).json({ errorMessage: "An unexpected error occured. Check server logs" });
+    }
+}
+
+export const getAvailableVehicleTypesForUserHandler = async (req, res) => {
+    try {
+        const vehicleTypes = await getAvailableVehicleTypesForUserController(req.user.userId)
+        res.status(200).json(vehicleTypes)
+    }
+    catch (error) {
+        console.log("An unexpected error occured while listing available vehicle types to book for a user: ", error.message)
         res.status(500).json({ errorMessage: "An unexpected error occured. Check server logs" });
     }
 }

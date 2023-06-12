@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { deleteVehiclesHandler, insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler } from './handlers/vehicle.js';
+import { deleteVehiclesHandler, getAvailableVehicleTypesForUserHandler, getAvailableVehiclesInSessionHandler, insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler } from './handlers/vehicle.js';
 import { addScheduleHandler, getScheduleHandler, listPackagesHandler, listPaymentNotificationsHandler, notifyPaymentHandler, updatePackagesHandler, verifyPackagePaymentHandler } from './handlers/package.js';
 import { getBookingListHandler, loginHandler, otpVerificationHandler, traineeRegisterHandler, getTraineeListHandler } from './handlers/trainee.js';
 import { commonAuth, traineeAuth, trainerAuth } from './middleware/auth.js';
@@ -27,6 +27,8 @@ app.put("/vehicles/:id", trainerAuth, updateVehiclesHandler)
 app.post("/vehicles", trainerAuth, insertVehiclesHandler)
 app.delete('/vehicles/:id', trainerAuth, deleteVehiclesHandler)
 app.post('/vehicles/:vehicleId/schedule', traineeAuth, addScheduleHandler)
+app.get('/vehicles/available', traineeAuth, getAvailableVehiclesInSessionHandler)
+app.get('/vehicles/types/available', traineeAuth, getAvailableVehicleTypesForUserHandler)
 
 app.get("/leaves", commonAuth, listLeaveHandler)
 app.put("/leaves/:id", trainerAuth, updateLeaveHandler)
