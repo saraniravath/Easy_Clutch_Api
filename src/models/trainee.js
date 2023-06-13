@@ -45,7 +45,6 @@ export const updateTraineeDetails = async (traineeDetails, id) => {
 
 export const addTraineeDetails = async (traineeDetails) => {
     const { firstName, lastName, username, password } = traineeDetails;
-    // Create user in our database
     const [result] = await pool.query(
         "INSERT INTO trainee (username, password,first_name,last_name) VALUES (?,?,?,?)",
         [username, password, firstName, lastName]
@@ -110,8 +109,19 @@ export const getTraineeList = async () => {
 }
 
 
-export const getBookingList = async () => {
-    const [rows, fields] = await pool.query("SELECT trainee.id traineeId,trainee.first_name firstName,trainee.last_name lastName,vehicle_type.name vehicleType FROM trainee,package,vehicle_type WHERE trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle_type.id AND package.active=1");
+export const getBookingList = async (active, userId) => {
+    let filterQuery = ""
+    let whereValues = []
+    if( active === "1" ){
+        filterQuery = filterQuery + " AND package.remaining_sessions > 0 "
+    } else if (active === "0") {
+        filterQuery = filterQuery + " AND package.remaining_sessions = 0 "
+    }
+    if(userId) {
+        filterQuery = filterQuery + " AND trainee.id = ? "
+        whereValues.push(userId)
+    }
+    const [rows, fields] = await pool.query("SELECT trainee.id traineeId,trainee.first_name firstName,trainee.last_name lastName,vehicle_type.name vehicleType, package.remaining_sessions remainingSessions FROM trainee,package,vehicle_type WHERE trainee.id=package.trainee_id AND package.package_vehicle_type_id=vehicle_type.id AND package.active=1" + filterQuery, whereValues);
     if (rows)
         return rows;
     return [];

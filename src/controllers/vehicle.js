@@ -1,4 +1,4 @@
-import { deleteVehiclesModel, insertVehiclesModel, listVehiclesModel, updateVehiclesModel } from "../models/vehicle.js"
+import { deleteVehiclesModel, getAvailableVehicleTypesForUser, getAvailableVehiclesInSession, insertVehiclesModel, listVehiclesModel, updateVehiclesModel } from "../models/vehicle.js"
 
 
 export const listVehiclesController = (type, modelName, registrationNumber) => {
@@ -15,4 +15,12 @@ export const insertVehiclesController = (modelName, registrationNumber, type) =>
 
 export const deleteVehicleController = (id) =>  {
     return deleteVehiclesModel(id)
+}
+
+export const getAvailableVehiclesInSessionController = (sessionDetails) => {
+    return getAvailableVehiclesInSession(sessionDetails)
+}
+
+export const getAvailableVehicleTypesForUserController = (userId) => {
+    return getAvailableVehicleTypesForUser(userId)
 }
