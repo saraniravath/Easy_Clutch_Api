@@ -4,6 +4,7 @@ import {
     getScheduleForTrainerModel,
     insertPackageModel, listPackagesModel, updatePackagesModel, getActivePackageIdForVehicle
 } from "../models/package.js"
+import { listLeaveModel } from "../models/trainer.js"
 
 export const listPackagesController = (name) => {
     return listPackagesModel(name)
@@ -35,15 +36,18 @@ export const addScheduleController = async (scheduleDetails) => {
     const vehicleActive = await checkVehicleActive(scheduleDetails.vehicleId)
     const vehicleFree = await checkVehicleUsage(scheduleDetails)
     const packageId = await getActivePackageIdForVehicle(scheduleDetails.vehicleId, scheduleDetails.traineeId)
+    const markedLeavesForSession = await listLeaveModel(scheduleDetails.date, scheduleDetails.time)
     if (packageId === 0)
         return 1
     else if (!vehicleActive)
         return 2
-    else if(!vehicleFree)
+    else if (!vehicleFree)
         return 3
+    else if (markedLeavesForSession.length > 0)
+        return 4
     else {
         await addScheduleModel(packageId, scheduleDetails)
-        return 4
+        return 5
     }
 }
 

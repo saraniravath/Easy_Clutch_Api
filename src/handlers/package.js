@@ -87,14 +87,16 @@ export const addScheduleHandler = async (req, res) => {
             traineeId: req.user.userId
         }
         const code = await addScheduleController(scheduleDetails)
-        if (code === 4)
+        if (code === 5)
             res.status(200).json({ successMessage: "The schedule was successfully added" })
         if (code === 1)
-            res.status(404).json({ errorMessage: "You have exhausted your sessions for vehicles of this type. Buy a new package of this type to book new sessions for this vehicle." })
+            res.status(400).json({ errorMessage: "You have exhausted your sessions for vehicles of this type. Buy a new package of this type to book new sessions for this vehicle." })
         if (code === 2)
             res.status(400).json({ errorMessage: "This vehicle is currently not active" })
         if (code === 3)
             res.status(400).json({ errorMessage: "This vehicle is already booked for this session" })
+        if (code === 4)
+            res.status(400).json({ errorMessage: "This session was marked as leave by trainer" })
     }
     catch (error) {
         console.log("An unexpected error occured while adding schedule: ", error.message)
