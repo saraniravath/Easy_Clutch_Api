@@ -73,8 +73,8 @@ export const createCheckoutSessionController = async (productId, customerEmail) 
             }
         ],
         mode: 'payment',
-        success_url: `http://localhost:5173/home?payment=success`,
-        cancel_url: `http://localhost:5000?payment=cancelled`,
+        success_url: `${env.traineeFeHost}/packages?payment=success`,
+        cancel_url: `${env.traineeFeHost}/packages?payment=cancelled`,
     });
     return session;
 }
