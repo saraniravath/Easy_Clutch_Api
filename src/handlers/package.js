@@ -1,5 +1,5 @@
 import {
-    addScheduleController, displayRequestPackageController, getScheduleController, insertPackageController, listPackagesController,
+    addScheduleController, createCheckoutSessionController, displayRequestPackageController, getScheduleController, handleWebhookEventController, insertPackageController, listPackagesController,
     updatePackagesController, verifyPackagePaymentController
 } from "../controllers/package.js"
 
@@ -114,3 +114,27 @@ export const getScheduleHandler = async (req, res) => {
         res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
     }
 }
+
+export const createCheckoutSession = async (req, res) => {
+    try {
+        const session = await createCheckoutSessionController(req.params.packageId, req.user.username)
+        res.status(200).json({ url: session.url });
+    }
+    catch (error) {
+        console.log("An unexpected error occured while creating checkout session: ", error.message)
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
+    }
+}
+
+export const handleWebhookEvent = async (req, res) => {
+    try {
+        const payload = req.body;
+        const signature = req.headers['stripe-signature'];
+        await handleWebhookEventController(payload, signature)
+        res.status(200).end();
+    }
+    catch (error) {
+        console.log("An unexpected error occured while handling webhook event: ", error.message)
+        res.status(400).json({ errorMessage: `Webhook Error: ${error.message}`});
+    }
+};

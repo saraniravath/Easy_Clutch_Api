@@ -1,7 +1,7 @@
 import { pool } from "../util/mysql.js"
 
 export const listPackagesModel = async (name) => {
-    const basicQuery = "SELECT * FROM vehicle_type"
+    const basicQuery = "SELECT id, name, price, price_id priceId FROM vehicle_type"
     const values = []
     const fields = []
     if (name) {
@@ -119,4 +119,14 @@ export const getScheduleForTraineeModel = async (traineeId) => {
 export const checkVehicleAllowedInPackage = async (vehicleId, packageId) => {
     const [rows, fields] = await pool.query("SELECT COUNT(1) vehicleAllowed FROM vehicle, package, vehicle_type WHERE vehicle.id = ? AND vehicle.type = vehicle_type.id AND vehicle_type.id = package.package_vehicle_type_id AND package.id = ?", [vehicleId, packageId])
     return rows[0].vehicleAllowed
+}
+
+export const getPriceIdOfProduct = async (productId) => {
+    const [rows, fields] = await pool.query("SELECT price_id priceId FROM vehicle_type WHERE id = ?", [productId])
+    return rows[0].priceId
+}
+
+export const registerPackagePayment = async (transactionId, traineeEmail, productPriceId) => {
+    await pool.query("INSERT INTO package(trainee_id, transaction_id, package_vehicle_type_id) VALUES ( (SELECT id FROM trainee WHERE username = ?), ?, (SELECT id FROM vehicle_type WHERE price_id = ?))", [traineeEmail, transactionId, productPriceId]);
+    return
 }

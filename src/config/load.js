@@ -13,7 +13,10 @@ const envMap = {
     dbName: "DB_DATABASE",
     dbUser: "DB_USER",
     dbPassword: "DB_PASSWORD",
-    dbPort: "DB_PORT"
+    dbPort: "DB_PORT",
+    stripeAPIKey: "STRIPE_API_KEY",
+    stripeWebhookSecret: "STRIPE_WEBHOOK_SECRET",
+    traineeFeHost: "TRAINEE_FE_HOST"
 }
 
 let env = {};
