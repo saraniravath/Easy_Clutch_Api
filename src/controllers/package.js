@@ -1,10 +1,13 @@
+import env from "../config/load.js";
 import {
     activatePackage, addScheduleModel, checkVehicleActive, checkVehicleUsage, getAvailableSession, getRequestPackage,
     getScheduleForTraineeModel,
     getScheduleForTrainerModel,
-    insertPackageModel, listPackagesModel, updatePackagesModel, getActivePackageIdForVehicle
+    insertPackageModel, listPackagesModel, updatePackagesModel, getActivePackageIdForVehicle, getPriceIdOfProduct, registerPackagePayment
 } from "../models/package.js"
-import { listLeaveModel } from "../models/trainer.js"
+import { listLeaveModel } from "../models/trainer.js";
+import Stripe from 'stripe';
+const stripe = Stripe(env.stripeAPIKey)
 
 export const listPackagesController = (name) => {
     return listPackagesModel(name)
@@ -56,5 +59,35 @@ export const getScheduleController = (user) => {
         return getScheduleForTraineeModel(user.userId)
     } else {
         return getScheduleForTrainerModel()
+    }
+}
+
+export const createCheckoutSessionController = async (productId, customerEmail) => {
+    const priceId = await getPriceIdOfProduct(productId);
+    const session = await stripe.checkout.sessions.create({
+        customer_email: customerEmail,
+        line_items: [
+            {
+                price: priceId,
+                quantity: 1,
+            }
+        ],
+        mode: 'payment',
+        success_url: `http://localhost:5173/home?payment=success`,
+        cancel_url: `http://localhost:5000?payment=cancelled`,
+    });
+    return session;
+}
+
+export const handleWebhookEventController = async (payload, signature) => {
+    const event = stripe.webhooks.constructEvent(payload, signature, env.stripeWebhookSecret);
+    if (event.type === 'checkout.session.completed') {
+        const session = await stripe.checkout.sessions.retrieve(
+            event.data.object.id,
+            {
+                expand: ['line_items'],
+            }
+        );
+        await registerPackagePayment(session.id, session.customer_email, session.line_items.data[0].price.id)
     }
 }
