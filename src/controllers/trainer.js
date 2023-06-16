@@ -1,4 +1,5 @@
-import { getTrainerByUsername, deleteLeaveModel, insertLeaveModel, listLeaveModel, updateLeaveModel } from "../models/trainer.js";
+import { getTrainerByUsername, deleteLeaveModel, insertLeaveModel, listLeaveModel, 
+        updateLeaveModel, insertTrainer } from "../models/trainer.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import env from "../config/load.js";
@@ -47,4 +48,14 @@ export const insertLeaveController = async (date, fnOrAn) => {
 
 export const deleteLeaveController = (id) => {
     return deleteLeaveModel(id)
+}
+
+
+export const trainerRegisterController = async (trainerDetails) => {
+    trainerDetails.password = await bcrypt.hash(trainerDetails.password, 10);
+    const register=await insertTrainer(trainerDetails)
+    if(register){
+        return 1
+    }
+    return 0
 }
