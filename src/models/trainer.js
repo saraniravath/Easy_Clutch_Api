@@ -61,5 +61,5 @@ export const deleteLeaveModel = async (id) => {
 export const insertTrainer = async (trainerDetails) => {
     const sqlQuery = "INSERT INTO Trainer (username,password,firstname,lastname) VALUES (?, ?, ?, ?)"
     await pool.query(sqlQuery, [trainerDetails.username, trainerDetails.password, trainerDetails.firstName, trainerDetails.lastName])
-    return 1
+    return 
 }

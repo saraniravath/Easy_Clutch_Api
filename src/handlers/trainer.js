@@ -111,7 +111,7 @@ export const trainerRegisterHandler = async (req, res) => {
 
         const register = await trainerRegisterController(req.body);
         if (register) {
-            res.status(200).json({ successMessage: "OTP was successfully send" })
+            res.status(200).json({ successMessage: "Trainer registered successfully" })
             return;
         }
         res.status(500).json({ Message: "Username already taken" })
