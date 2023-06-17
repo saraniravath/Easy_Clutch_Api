@@ -1,4 +1,5 @@
-import { trainerLoginController, deleteLeaveController, insertLeaveController, listLeaveController, updateLeaveController} from "../controllers/trainer.js";
+import { trainerLoginController, deleteLeaveController, insertLeaveController, 
+        listLeaveController, updateLeaveController, trainerRegisterController} from "../controllers/trainer.js";
 
 
 export const trainerLoginHandler = async (req, res) => {
@@ -96,4 +97,28 @@ export const deleteLeaveHandler = async (req, res) => {
         console.log("An unexpected error occured while deleting leave", error.message)
         res.status(500).json({ errorMessage: "An unexpected error occured. Check server logs" });
     }
+}
+
+
+export const trainerRegisterHandler = async (req, res) => {
+    try {
+        
+        const {username, firstName, lastName,  password } = req.body;
+        if (!(username && password && firstName && lastName)) {
+            res.status(400).json({ errorMessage: "All input is required" });
+            return;
+        }
+
+        const register = await trainerRegisterController(req.body);
+        if (register) {
+            res.status(200).json({ successMessage: "Trainer registered successfully" })
+            return;
+        }
+        res.status(500).json({ Message: "Username already taken" })
+    }
+    catch (error) {
+        console.log("An unexpected error occured while registering trainer ", error.message)
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
+    }
+
 }

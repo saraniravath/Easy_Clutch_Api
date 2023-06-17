@@ -4,7 +4,7 @@ import { deleteVehiclesHandler, getAvailableVehicleTypesForUserHandler, getAvail
 import { addScheduleHandler, createCheckoutSession, getScheduleHandler, handleWebhookEvent, listPackagesHandler, listPaymentNotificationsHandler, notifyPaymentHandler, updatePackagesHandler, verifyPackagePaymentHandler } from './handlers/package.js';
 import { getBookingListHandler, loginHandler, otpVerificationHandler, traineeRegisterHandler, getTraineeListHandler } from './handlers/trainee.js';
 import { commonAuth, traineeAuth, trainerAuth } from './middleware/auth.js';
-import { deleteLeaveHandler, insertLeaveHandler, listLeaveHandler, trainerLoginHandler, updateLeaveHandler } from './handlers/trainer.js';
+import { deleteLeaveHandler, insertLeaveHandler, listLeaveHandler, trainerLoginHandler, trainerRegisterHandler, updateLeaveHandler } from './handlers/trainer.js';
 import env from './config/load.js';
 import { checkDatabaseConnection } from './util/mysql.js';
 
@@ -43,6 +43,7 @@ app.post(`/trainees/login`, express.json(), loginHandler)
 app.get(`/trainees/bookings`, commonAuth, getBookingListHandler)
 
 app.post('/trainers/login', express.json(), trainerLoginHandler)
+app.post('/trainers/register', express.json(), trainerRegisterHandler)
 
 app.use((req, res, next) => {
     res.status(404).json({ errorMessage: "URL not found" })
