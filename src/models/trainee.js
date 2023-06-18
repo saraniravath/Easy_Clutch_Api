@@ -126,3 +126,13 @@ export const getBookingList = async (active, userId) => {
         return rows;
     return [];
 }
+
+
+export const updatePassword = async (id,password) => {
+
+    const result = await pool.query("UPDATE trainee SET password= ? WHERE id = ?", [password,id]);
+    if (result[0].affectedRows === 0) {
+        return false
+    }
+    return true
+}
