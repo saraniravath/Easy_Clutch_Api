@@ -4,7 +4,7 @@ import {
     getTraineeList,
     getBookingList,
     getUserByUsername,
-    getUserId, storeOtp, updateActive, updateTraineeDetails
+    getUserId, storeOtp, updateActive, updateTraineeDetails, updatePassword
 } from "../models/trainee.js";
 import { sendEmail } from "../util/email.js";
 import { generateOTP } from "../util/otp.js";
@@ -69,8 +69,29 @@ export const getTraineeListController = () => {
 }
 
 export const getBookingListController = (userType, userId, active) => {
-    if(userType === "trainee")
-        return getBookingList(active, userId);    
+    if (userType === "trainee")
+        return getBookingList(active, userId);
     return getBookingList(active);
 }
 
+
+export const updatePasswordOtpController = async (body) => {
+    const user = await getUserByUsername(body.username)
+    const { id: userId, first_name, username } = user;
+    const otp = generateOTP(); 
+    const otpDetails = { otp, userId }
+    await storeOtp(otpDetails);
+    const emailContent = { first_name, username, otp, subject: "otp verification" }
+    await sendEmail(emailContent);
+    return userId;
+}
+
+export const updatePasswordController = async (body) => {
+    const count = await checkIfOtpIsValid(body.otp, body.id);
+    if (count) {
+        const password = await bcrypt.hash(body.password, 10);
+        await updatePassword(body.id, password)
+        return true;
+    }
+    return 0
+}

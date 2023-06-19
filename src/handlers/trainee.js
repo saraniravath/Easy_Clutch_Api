@@ -1,4 +1,7 @@
-import { getTraineeListController, getBookingListController, loginController, otpVerificationController, traineeRegisterController } from "../controllers/trainee.js";
+import {
+    getTraineeListController, getBookingListController, loginController,
+    otpVerificationController, traineeRegisterController, updatePasswordOtpController, updatePasswordController
+} from "../controllers/trainee.js";
 
 export const traineeRegisterHandler = async (req, res) => {
     try {
@@ -73,6 +76,37 @@ export const getBookingListHandler = async (req, res) => {
     }
     catch (e) {
         console.log("An unexpected error occured while listing bookings: ", e.message)
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
+    }
+}
+
+
+export const updatePasswordOtpHandler = async (req, res) => {
+    try {
+        const send = await updatePasswordOtpController(req.body);
+        if (send) {
+            res.status(200).json({ successMessage: "OTP was successfully send", id: send })
+            return;
+        }
+        res.status(500).json({ Message: "Username dosen't exist" })
+    }
+    catch (e) {
+        console.log("An unexpected error occured while sending otp for forgot password: ", e.message)
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
+    }
+}
+
+export const updatePasswordHandler = async (req, res) => {
+    try {
+        const response = await updatePasswordController(req.body);
+        if (response) {
+            res.status(200).json({ successMessage: "Password updated successfully" })
+            return;
+        }
+        res.status(500).json({ Message: "Username dosen't exist" })
+    }
+    catch (e) {
+        console.log("An unexpected error occured while updating forgot password: ", e.message)
         res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
     }
 }
