@@ -1,14 +1,22 @@
 import express from 'express';
 import cors from 'cors';
-import { deleteVehiclesHandler, getAvailableVehicleTypesForUserHandler, getAvailableVehiclesInSessionHandler, 
-        insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler } from './handlers/vehicle.js';
-import { addScheduleHandler, createCheckoutSession, getScheduleHandler, handleWebhookEvent, listPackagesHandler, 
-        listPaymentNotificationsHandler, notifyPaymentHandler, updatePackagesHandler, verifyPackagePaymentHandler } from './handlers/package.js';
-import { getBookingListHandler, loginHandler, otpVerificationHandler, traineeRegisterHandler, getTraineeListHandler, 
-        updatePasswordOtpHandler, updatePasswordHandler } from './handlers/trainee.js';
+import {
+    deleteVehiclesHandler, getAvailableVehicleTypesForUserHandler, getAvailableVehiclesInSessionHandler,
+    insertVehiclesHandler, listVehiclesHandler, updateVehiclesHandler
+} from './handlers/vehicle.js';
+import {
+    addScheduleHandler, createCheckoutSession, getScheduleHandler, handleWebhookEvent, listPackagesHandler,
+    listPaymentNotificationsHandler, notifyPaymentHandler, updatePackagesHandler, verifyPackagePaymentHandler
+} from './handlers/package.js';
+import {
+    getBookingListHandler, loginHandler, otpVerificationHandler, traineeRegisterHandler, getTraineeListHandler,
+    updatePasswordOtpHandler, updatePasswordHandler
+} from './handlers/trainee.js';
 import { commonAuth, traineeAuth, trainerAuth } from './middleware/auth.js';
-import { deleteLeaveHandler, insertLeaveHandler, listLeaveHandler, trainerLoginHandler, 
-        trainerRegisterHandler, updateLeaveHandler } from './handlers/trainer.js';
+import {
+    deleteLeaveHandler, getTrainersHandler, insertLeaveHandler, listLeaveHandler, trainerLoginHandler,
+    trainerRegisterHandler, updateLeaveHandler
+} from './handlers/trainer.js';
 import env from './config/load.js';
 import { checkDatabaseConnection } from './util/mysql.js';
 
@@ -48,6 +56,7 @@ app.get(`/trainees/bookings`, commonAuth, getBookingListHandler)
 
 app.post('/trainers/login', express.json(), trainerLoginHandler)
 app.post('/trainers/register', express.json(), trainerRegisterHandler)
+app.get(`/trainer/details`, getTrainersHandler)
 
 app.post('/forgotpassword', express.json(), updatePasswordOtpHandler)
 app.post('/forgotpassword/verify', express.json(), updatePasswordHandler)

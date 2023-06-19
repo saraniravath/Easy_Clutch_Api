@@ -51,12 +51,12 @@ export const loginController = async (loginDetails) => {
     const username = loginDetails.username;
     if (loginDetails && trainee && (await bcrypt.compare(loginDetails.password, trainee.password))) {
         const token = jwt.sign(
-            { username, userId: trainee.id, firstName: trainee.firstname, lastName: trainee.lastname, userType: "trainee" },
+            { username, userId: trainee.id, firstName: trainee.first_name, lastName: trainee.last_name, userType: "trainee" },
             env.authTokenKey,
             { expiresIn: env.authTokenExpiry }
         );
         const response = {
-            token: `Bearer ${token}`, username
+            token: `Bearer ${token}`, username, name: trainee.first_name,
         }
         return response;
     }

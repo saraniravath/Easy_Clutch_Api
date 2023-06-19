@@ -1,5 +1,7 @@
-import { trainerLoginController, deleteLeaveController, insertLeaveController, 
-        listLeaveController, updateLeaveController, trainerRegisterController} from "../controllers/trainer.js";
+import {
+    trainerLoginController, deleteLeaveController, insertLeaveController,
+    listLeaveController, updateLeaveController, trainerRegisterController, getTrainersController
+} from "../controllers/trainer.js";
 
 
 export const trainerLoginHandler = async (req, res) => {
@@ -41,9 +43,9 @@ export const updateLeaveHandler = async (req, res) => {
         const id = req.params.id;
         const date = req.body.date;
         const fnOrAn = req.body.fnOrAn;
-        if(fnOrAn !== "FN" && fnOrAn !== "AN") {
+        if (fnOrAn !== "FN" && fnOrAn !== "AN") {
             res.status(400).json({ errorMessage: "fnOrAn should be either FN or AN" })
-            return 
+            return
         }
         const updated = await updateLeaveController(id, date, fnOrAn)
         if (updated === 0) {
@@ -66,9 +68,9 @@ export const insertLeaveHandler = async (req, res) => {
     try {
         const date = req.body.date;
         const fnOrAn = req.body.fnOrAn;
-        if(fnOrAn !== "FN" && fnOrAn !== "AN") {
+        if (fnOrAn !== "FN" && fnOrAn !== "AN") {
             res.status(400).json({ errorMessage: "fnOrAn should be either FN or AN" })
-            return 
+            return
         }
         const inserted = await insertLeaveController(date, fnOrAn)
         if (inserted === 0) {
@@ -102,8 +104,8 @@ export const deleteLeaveHandler = async (req, res) => {
 
 export const trainerRegisterHandler = async (req, res) => {
     try {
-        
-        const {username, firstName, lastName,  password } = req.body;
+
+        const { username, firstName, lastName, password } = req.body;
         if (!(username && password && firstName && lastName)) {
             res.status(400).json({ errorMessage: "All input is required" });
             return;
@@ -118,7 +120,18 @@ export const trainerRegisterHandler = async (req, res) => {
     }
     catch (error) {
         console.log("An unexpected error occured while registering trainer ", error.message)
-        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
-    }
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' });
+    }
 
+}
+
+export const getTrainersHandler = async (req, res) => {
+    try {
+        const response = await getTrainersController()
+        res.status(200).json(response)
+    }
+    catch (error) {
+        console.log("An unexpected error occured while listing Trainers ", error.message)
+        res.status(500).json({ errorMessage: 'An unexpected error occured. Check server logs' })
+    }
 }
